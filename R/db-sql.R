@@ -202,7 +202,7 @@ sql_query_wrap <- function(con, from, name = NULL, ..., lvl = 0) {
   UseMethod("sql_query_wrap")
 }
 #' @export
-sql_query_wrap.DBIConnection <- function(con, from, name = NULL, ..., lvl = 0) {
+sql_query_wrap.DBIConnection <- function(con, from, name = NULL, ..., lvl = 0) { #browser()
   if (is.ident(from)) {
     setNames(from, name)
   } else if (is_schema(from) || is_catalog(from)) {
@@ -435,26 +435,39 @@ sql_query_multi_join.DBIConnection <- function(con,
                                                table_vars,
                                                vars,
                                                ...,
-                                               lvl = 0) {
+                                               lvl = 0) {#browser()
   table_names <- names(table_vars)
   if (vctrs::vec_duplicate_any(table_names)) {
     cli_abort("{.arg table_names} must be unique.")
   }
+  # table_names <- purrr::map_chr(table_names, function(x) {x; unique_subquery_name()})
+  #
+  # joins$x_as <- ident(table_names[[1]])
+  # joins$y_as <- ident(table_names[[2]])
 
   select_sql <- sql_multi_join_vars(con, vars, table_vars)
-  from <- dbplyr_sql_subquery(con, x, name = table_names[[1]], lvl = lvl)
+  # from <- dbplyr_sql_subquery(con, x, name = table_names[[1]], lvl = lvl) # AB
+  # from <- dbplyr_sql_subquery(con, x, lvl = lvl)
+  from <- sql(table_names[[1]])
 
-  join_table_queries <- purrr::map2(
-    joins$table,
-    table_names[-1],
-    function(table, name) dbplyr_sql_subquery(con, table, name = name, lvl = lvl)
-  )
+  if (length(table_names[-1] == 1)) {
+    join_table_queries <- table_names[[2]]
+  } else {
+
+
+    join_table_queries <- purrr::map2(
+      joins$table,
+      table_names[-1],
+      function(table, name) dbplyr_sql_subquery(con, table, name = name, lvl = lvl)
+    )
+  }
   types <- toupper(paste0(joins$type, " JOIN"))
   join_clauses <- purrr::map2(
     types,
     join_table_queries,
     function(join_kw, from) sql_clause(join_kw, from)
   )
+
 
   on_clauses <- purrr::map(
     joins$by,
@@ -916,6 +929,6 @@ dbplyr_sql_subquery <- function(con, ...) {
 }
 #' @export
 #' @importFrom dplyr sql_subquery
-sql_subquery.DBIConnection <- function(con, from, name = unique_subquery_name(), ..., lvl = 0) {
+sql_subquery.DBIConnection <- function(con, from, name = unique_subquery_name(), ..., lvl = 0) {#browser()
   sql_query_wrap(con, from = from, name = name, ..., lvl = lvl)
 }

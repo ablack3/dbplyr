@@ -179,7 +179,8 @@ sql_multi_join_vars <- function(con, vars, table_vars) {
     used_vars_current <- vars$var[vars_idx]
     out_vars_current <- vars$name[vars_idx]
 
-    if (join_can_use_star(all_vars_current, used_vars_current, out_vars_current, vars_idx)) {
+    # if (join_can_use_star(all_vars_current, used_vars_current, out_vars_current, vars_idx)) {
+    if (FALSE) {
       id <- vars_idx[[1]]
       tbl_alias <- escape(ident(table_names[i]), con = con)
       out[[id]] <- sql(paste0(tbl_alias, ".*"))
@@ -216,7 +217,7 @@ join_can_use_star <- function(all_vars, used_vars, out_vars, idx) {
   all(diff(idx) == 1)
 }
 
-sql_multi_join_var <- function(con, var, table_id, table_names, duplicated_vars) {
+sql_multi_join_var <- function(con, var, table_id, table_names, duplicated_vars) {#browser()
   if (length(table_id) > 1) {
     if (length(table_id) != 2 || length(var) != 2) {
       cli_abort("{.arg table_id} or {.arg var} does not have length 2", .internal = TRUE)
@@ -293,11 +294,13 @@ sql_join_tbls <- function(con, by, na_matches = "never") {
   }
 }
 
-sql_table_prefix <- function(con, var, table = NULL) {
+sql_table_prefix <- function(con, var, table = NULL) {#browser()
   var <- sql_escape_ident(con, var)
 
   if (!is.null(table)) {
-    table <- escape(table, collapse = NULL, con = con)
+    if (!grepl("\\.", table)) { # how can we tell if table is already quoted? e.g. \"schema\".\"table\"
+      table <- escape(table, collapse = NULL, con = con)
+    }
     sql(paste0(table, ".", var))
   } else {
     var

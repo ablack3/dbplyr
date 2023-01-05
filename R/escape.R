@@ -74,6 +74,9 @@ escape.POSIXt <- function(x, parens = NA, collapse = ", ", con = NULL) {
 
 #' @export
 escape.character <- function(x, parens = NA, collapse = ", ", con = NULL) {
+  if(grepl("\"|\'", x)) { # already escaped
+    return(x)
+  }
   sql_vector(sql_escape_string(con, x), parens, collapse, con = con)
 }
 
