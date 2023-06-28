@@ -49,9 +49,6 @@
     <loc>https://dbplyr.tidyverse.org/dev/news/index.html</loc>
   </url>
   <url>
-    <loc>https://dbplyr.tidyverse.org/dev/reference/args_by.html</loc>
-  </url>
-  <url>
     <loc>https://dbplyr.tidyverse.org/dev/reference/arrange.tbl_lazy.html</loc>
   </url>
   <url>
@@ -226,9 +223,6 @@
     <loc>https://dbplyr.tidyverse.org/dev/reference/simulate_dbi.html</loc>
   </url>
   <url>
-    <loc>https://dbplyr.tidyverse.org/dev/reference/simulate_vars.html</loc>
-  </url>
-  <url>
     <loc>https://dbplyr.tidyverse.org/dev/reference/sql.html</loc>
   </url>
   <url>
@@ -236,6 +230,9 @@
   </url>
   <url>
     <loc>https://dbplyr.tidyverse.org/dev/reference/sql_expr.html</loc>
+  </url>
+  <url>
+    <loc>https://dbplyr.tidyverse.org/dev/reference/sql_options.html</loc>
   </url>
   <url>
     <loc>https://dbplyr.tidyverse.org/dev/reference/sql_query_insert.html</loc>
